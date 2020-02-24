@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <AUnit.h>
+#include "maze_v2.h"
 /*
  *Author: Muhammad TareqUzzaman
  *
@@ -7,9 +8,11 @@
  *Added "maze_v2.h" for modularity and test
  * */
 
-#include "maze_v2.h"
+
+
 
 /*
+ *
  *  "maze_v2.h" has all this
  //Constants
  #define Baudrate 9600

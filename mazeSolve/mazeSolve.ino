@@ -1,5 +1,3 @@
-
-
 //Constants
 const int motorA1      = 5;  
 const int motorA2      = 6; 
@@ -18,6 +16,11 @@ const int echoPin = 4;
 
 long duration;
 double distance;
+
+bool isDone = false;
+
+String pathArray [40];
+int index = 0; 
 
 // the setup routine runs once when you press reset:
 void setup() {
@@ -51,6 +54,8 @@ void left() {
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
     analogWrite (motorB2,150);
+    pathArray[index] = "Left";
+    index++; 
 }
 
 void right() {
@@ -58,6 +63,8 @@ void right() {
     analogWrite (motorA2,150);
     digitalWrite (motorB1,LOW);
     digitalWrite (motorB2,LOW);
+    pathArray[index] = "Right";
+    index++; 
 }
 
 void straight() {
@@ -65,6 +72,8 @@ void straight() {
     digitalWrite (motorA2,HIGH);
     digitalWrite (motorB1,LOW);
     digitalWrite (motorB2,HIGH);
+    pathArray[index] = "Straight";
+    index++; 
 }
 
 void turnRight(int leftSensorValue, int rightSensorValue) {
@@ -78,6 +87,8 @@ void turnRight(int leftSensorValue, int rightSensorValue) {
       int leftSensorValue = digitalRead(FrontOpticalSensorLeft);
       int rightSensorValue = digitalRead(FrontOpticalSensorRight);
       if(leftSensorValue==1 && rightSensorValue==1) {
+        pathArray[index] = "Right";
+        index++; 
         return;
       }
     }
@@ -94,19 +105,36 @@ void turnLeft(int leftSensorValue, int rightSensorValue) {
       int leftSensorValue = digitalRead(FrontOpticalSensorLeft);
       int rightSensorValue = digitalRead(FrontOpticalSensorRight);
       if(leftSensorValue==1 && rightSensorValue==1) {
+        pathArray[index] = "Left";
+        index++;
         return;
       }
     }
 }
 
 
-
+void printArray(){
+  String path = ""; 
+  for(int i=0; i<= index; i++){
+    if(pathArray[i] == "Left"){
+      path.concat("<-,");
+    }
+    if(pathArray[i] == "Right"){
+      path.concat("->,");
+    }
+    if(pathArray[i] == "Straight"){
+      path.concat(" |^ ");
+    }
+    if(pathArray[i] == "TurnAround"){
+      path.concat(" W ");
+    }
+  }
+  serial.println(path);
+}
 
 
 // the loop routine runs over and over again forever:
 void loop() {
-
-  
   // read the input on analog pin 0:
   int leftSensorValue = digitalRead(FrontOpticalSensorLeft);
   int rightSensorValue = digitalRead(FrontOpticalSensorRight);
@@ -135,6 +163,8 @@ void loop() {
   Serial.println(distance);
   if(distance <= 15) {
     turnRight(leftSensorValue, rightSensorValue);
+    pathArray[index] = "TurnAround";
+    index++; 
   }
   if(leftSensorValue==1 && rightSensorValue==1){
     if(SideRightSensorValue){
@@ -156,6 +186,9 @@ void loop() {
   //stop
   if(leftSensorValue==0 && rightSensorValue==0){
     stop();
+  }
+  if(isDone){
+    printArray();
   }
 
 }

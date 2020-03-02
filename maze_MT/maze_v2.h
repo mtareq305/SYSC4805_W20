@@ -70,7 +70,7 @@ double sonSen() {
 	distance = duration * 0.034 / 2;
 	return distance;
 }
-void stop();
+
 void stop() {
 	digitalWrite(motorA1, LOW);
 	digitalWrite(motorA2, LOW);
@@ -78,21 +78,21 @@ void stop() {
 	digitalWrite(motorB2, LOW);
 }
 ;
-void left();
+
 void left() {
 	digitalWrite(motorA1, LOW);
 	digitalWrite(motorA2, LOW);
 	digitalWrite(motorB1, LOW);
 	analogWrite(motorB2, 150);
 }
-void right();
+
 void right() {
 	digitalWrite(motorA1, LOW);
 	analogWrite(motorA2, 150);
 	digitalWrite(motorB1, LOW);
 	digitalWrite(motorB2, LOW);
 }
-void straight();
+
 
 void straight() {
 	digitalWrite(motorA1, LOW);
@@ -101,40 +101,31 @@ void straight() {
 	digitalWrite(motorB2, HIGH);
 }
 
-void turnRight(int leftSensorValue, int rightSensorValue);
+
 
 void turnRight(int leftSensorValue, int rightSensorValue) {
-	digitalWrite(motorA1, LOW);
-	analogWrite(motorA2, 150);
-	digitalWrite(motorB1, LOW);
-	digitalWrite(motorB2, LOW);
+
 	delay(1000);
-	while (true) {
-		Serial.println("STUCK TURN RIFGHT");
-		leftSensorValue = digitalRead(FrontOpticalSensorLeft);
-		rightSensorValue = digitalRead(FrontOpticalSensorRight);
-		if (leftSensorValue == 1 && rightSensorValue == 1) {
-			break;
-			return;
-		}
-	}
+	do{ /*EXIT only when both 1  */ Serial.println("STUCK TURN RIGHT");
+		}while(!(digitalRead(FrontOpticalSensorLeft) & digitalRead(FrontOpticalSensorRight) ));
+
 }
 
-void turnLeft(int leftSensorValue, int rightSensorValue);
+
 
 void turnLeft(int leftSensorValue, int rightSensorValue) {
-	digitalWrite(motorA1, LOW);
-	digitalWrite(motorA2, LOW);
-	digitalWrite(motorB1, LOW);
-	analogWrite(motorB2, 150);
+
+	left();
 	delay(1000);
-	while (true) {
-		Serial.println("STUCK TURN LEFT");
-		leftSensorValue = digitalRead(FrontOpticalSensorLeft);
-		rightSensorValue = digitalRead(FrontOpticalSensorRight);
-		if (leftSensorValue == 1 && rightSensorValue == 1) {
-			break;
-			return;
-		}
-	}
+	do{ /*EXIT only when both 1  */ Serial.println("STUCK TURN LEFT");
+	}while(!(digitalRead(FrontOpticalSensorLeft) & digitalRead(FrontOpticalSensorRight) ));
+
+
+}
+
+uint8_t readPinMode(uint8_t pin) {
+	uint8_t bit = digitalPinToBitMask(pin);
+	uint8_t port = digitalPinToPort(pin);
+	volatile uint8_t *reg = portModeRegister(port);
+	return (*reg & bit)? 0x1 : 0x0;
 }

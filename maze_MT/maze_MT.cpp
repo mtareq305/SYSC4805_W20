@@ -64,10 +64,10 @@ void setup() {
 	while (T > 0) {
 		T = T - 1;
 		Test::run();
-		Test::out= &Serial; //ArduinoUnit.h only
+	//	Test::out= &Serial; //ArduinoUnit.h only
 
 	}; // UNIT TEST
-	delay(setupDelay);
+	//delay(setupDelay);
 	wdt_enable(WDTO_250MS);
 
 
@@ -183,11 +183,4 @@ test(pinSetup) {
 	assertEqual(readPinMode(echoPin), 0x0);
 }
 
-uint8_t readPinMode(uint8_t pin) {
-	uint8_t bit = digitalPinToBitMask(pin);
-	uint8_t port = digitalPinToPort(pin);
-	volatile uint8_t *reg = portModeRegister(port);
-	return (*reg & bit)? 0x1 : 0x0;
 
-
-}

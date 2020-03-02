@@ -1,6 +1,11 @@
 #include <Arduino.h>
-#include <AUnit.h>
+//#include <AUnit.h>
+//using namespace aunit;
+#include <ArduinoUnit.h>
 #include "maze_v2.h"
+
+#include <avr/wdt.h>
+
 /*
  *Author: Muhammad TareqUzzaman
  *
@@ -43,12 +48,13 @@
  volatile uint8_t SideRightSensorValue = 0;
  volatile uint8_t SideLeftSensorValue = 0;
  */
-
+volatile uint8_t state ;
 void pinSetup();
 uint8_t readPinMode(uint8_t pin);
 
 // the setup routine runs once when you press reset:
 void setup() {
+
 
 	pinSetup();
 	// initialize serial communication at 9600 bits per second:
@@ -57,10 +63,14 @@ void setup() {
 	uint8_t T = 10;
 	while (T > 0) {
 		T = T - 1;
-		aunit::TestRunner::run();
-	}; // UNIT TEST
+		Test::run();
+		Test::out= &Serial; //ArduinoUnit.h only
 
+	}; // UNIT TEST
 	delay(setupDelay);
+	wdt_enable(WDTO_250MS);
+
+
 }
 
 // the loop routine runs over and over again forever:
@@ -91,30 +101,53 @@ void loop() {
 	//go straigh
 	Serial.println(distance);
 
-	if (distance <= 15) {
-		turnRight(leftSensorValue, rightSensorValue);
-	}
-	if (leftSensorValue == 1 && rightSensorValue == 1) {
+
+
+
+
+
+	Serial.println(state);
+
+	if (sonSen() < 16) {
+			turnRight(leftSensorValue, rightSensorValue);
+		}
+	state = (leftSensorValue) ?
+				((rightSensorValue) ? 0 : 1) : // leftSensorValue = 1
+				((rightSensorValue) ? 2 : 3); // leftSensorValue = 0
+
+	switch (state) {
+
+	case 0: // 1 : 1
 		if (SideRightSensorValue) {
 			turnRight(leftSensorValue, rightSensorValue);
 		} else if (SideLeftSensorValue) {
 			turnLeft(leftSensorValue, rightSensorValue);
 		} else {
 			straight();
-		}
+		} // straight
+
+
+		break;
+	case 1: // 1 : 0
+		left(); // Left
+
+
+		break;
+	case 2: // 0 : 1
+		right(); // Right
+
+		break;
+
+	case 3: // 0 : 0
+
+		stop(); //Stop
+
+		break;
+
+	default:
+		break;
 	}
-	//go Right
-	if (leftSensorValue == 0 && rightSensorValue == 1) {
-		right();
-	}
-	//go left
-	if (leftSensorValue == 1 && rightSensorValue == 0) {
-		left();
-	}
-	//stop
-	if (leftSensorValue == 0 && rightSensorValue == 0) {
-		stop();
-	}
+	wdt_reset(); // reboot
 
 }
 
@@ -167,12 +200,7 @@ uint8_t readPinMode(uint8_t pin) {
 	uint8_t bit = digitalPinToBitMask(pin);
 	uint8_t port = digitalPinToPort(pin);
 	volatile uint8_t *reg = portModeRegister(port);
+	return (*reg & bit)? 0x1 : 0x0;
 
-	if (*reg & bit) {
-		// It's an output
-		return 0x1;
-	} else {
-		// It's an input
-		return 0x0;
-	}
+
 }

@@ -13,48 +13,18 @@
  *Added "maze_v2.h" for modularity and test
  * */
 
-
-
-
 /*
  *
  *  "maze_v2.h" has all this
  //Constants
- #define Baudrate 9600
- #define setupDelay 3000
-
- #define  motorA1 5
- #define  motorA2 6
-
- #define  motorB1 11
- #define  motorB2 10
-
- #define FrontOpticalSensorRight  8
- #define  FrontOpticalSensorLeft 7
-
- #define  SideOpticalSensorRight A0
- #define  SideOpticalSensorLeft A1
-
- #define  trigPin  3
- #define  echoPin  4
+ SEE "maze_v2.h
  */
-
-/*
- volatile unsigned long duration;
- volatile double distance;
-
- volatile uint8_t leftSensorValue = 0;
- volatile uint8_t rightSensorValue = 0;
- volatile uint8_t SideRightSensorValue = 0;
- volatile uint8_t SideLeftSensorValue = 0;
- */
-volatile uint8_t state ;
+volatile uint8_t state;
 void pinSetup();
 uint8_t readPinMode(uint8_t pin);
 
 // the setup routine runs once when you press reset:
 void setup() {
-
 
 	pinSetup();
 	// initialize serial communication at 9600 bits per second:
@@ -64,12 +34,11 @@ void setup() {
 	while (T > 0) {
 		T = T - 1;
 		Test::run();
-	//	Test::out= &Serial; //ArduinoUnit.h only
+		//	Test::out= &Serial; //ArduinoUnit.h only
 
 	}; // UNIT TEST
-	//delay(setupDelay);
+	delay(setupDelay);
 	wdt_enable(WDTO_250MS);
-
 
 }
 
@@ -81,43 +50,31 @@ void loop() {
 	rightSensorValue = digitalRead(FrontOpticalSensorRight);
 	SideRightSensorValue = digitalRead(SideOpticalSensorRight);
 	SideLeftSensorValue = digitalRead(SideOpticalSensorLeft);
-	//  Serial.print("left Sensor: ");
-	//  Serial.println(leftSensorValue);
-	//  Serial.print("right Sensor: ");
-	//  Serial.println(rightSensorValue);
-
-
 
 	// Follow Line Logic
 
-
-
-
 	if (sonSen() < 16) {
-			turnRight(leftSensorValue, rightSensorValue);
-		}
-	state = (leftSensorValue) ?
-				((rightSensorValue) ? 0 : 1) : // leftSensorValue = 1
-				((rightSensorValue) ? 2 : 3); // leftSensorValue = 0
+		turnRightCont(leftSensorValue, rightSensorValue);
+	}
+	state = (leftSensorValue) ? ((rightSensorValue) ? 0 : 1) : // leftSensorValue = 1
+			((rightSensorValue) ? 2 : 3); // leftSensorValue = 0
 
 	Serial.println(distance);
-		Serial.println(state);
+	Serial.println(state);
 	switch (state) {
 
 	case 0: // 1 : 1
 		if (SideRightSensorValue) {
-			turnRight(leftSensorValue, rightSensorValue);
+			turnRightCont(leftSensorValue, rightSensorValue);
 		} else if (SideLeftSensorValue) {
-			turnLeft(leftSensorValue, rightSensorValue);
+			turnLeftCont(leftSensorValue, rightSensorValue);
 		} else {
 			straight();
 		} // straight
 
-
 		break;
 	case 1: // 1 : 0
 		left(); // Left
-
 
 		break;
 	case 2: // 0 : 1
@@ -135,7 +92,9 @@ void loop() {
 		break;
 	}
 	wdt_reset(); // reboot
-
+	if (isDone) {
+		printArray();
+	}
 }
 
 void pinSetup() {
@@ -182,5 +141,4 @@ test(pinSetup) {
 	assertEqual(echoPin, 4);
 	assertEqual(readPinMode(echoPin), 0x0);
 }
-
 

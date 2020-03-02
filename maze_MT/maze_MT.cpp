@@ -86,27 +86,12 @@ void loop() {
 	//  Serial.print("right Sensor: ");
 	//  Serial.println(rightSensorValue);
 
-	digitalWrite(trigPin, LOW);
-	delayMicroseconds(2);
-	// Sets the trigPin on HIGH state for 10 micro seconds
-	digitalWrite(trigPin, HIGH);
-	delayMicroseconds(10);
-	digitalWrite(trigPin, LOW);
-	// Reads the echoPin, returns the sound wave travel time in microseconds
-	duration = pulseIn(echoPin, HIGH);
-	// Calculating the distance
-	distance = duration * 0.034 / 2;
+
 
 	// Follow Line Logic
-	//go straigh
-	Serial.println(distance);
 
 
 
-
-
-
-	Serial.println(state);
 
 	if (sonSen() < 16) {
 			turnRight(leftSensorValue, rightSensorValue);
@@ -115,6 +100,8 @@ void loop() {
 				((rightSensorValue) ? 0 : 1) : // leftSensorValue = 1
 				((rightSensorValue) ? 2 : 3); // leftSensorValue = 0
 
+	Serial.println(distance);
+		Serial.println(state);
 	switch (state) {
 
 	case 0: // 1 : 1

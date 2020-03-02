@@ -2,7 +2,7 @@
 //#include <AUnit.h>
 //using namespace aunit;
 #include <ArduinoUnit.h>
-#include "maze_v2.h"
+#include "maze_ino/maze_v2.h"
 
 #include <avr/wdt.h>
 

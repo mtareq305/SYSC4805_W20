@@ -1,9 +1,9 @@
+//Include files
 #include <Arduino.h>
 //#include <AUnit.h>
 //using namespace aunit;
 #include <ArduinoUnit.h>
 #include "maze_v2.h"
-
 #include <avr/wdt.h>
 
 /*
@@ -17,6 +17,7 @@
  //Constants
  SEE "maze_v2.h
  */
+ //initialize variables
 volatile uint8_t state;
 void pinSetup();
 uint8_t readPinMode(uint8_t pin);
@@ -51,16 +52,20 @@ void loop() {
 
 	// Follow Line Logic
 
+  //if sensor is less than 16 cm away from object
 	if (sonSen() < 16) {
+    //turn robot to the right to avoid object
 		turnRightCont(leftSensorValue, rightSensorValue);
 	}
 	state = (leftSensorValue) ? ((rightSensorValue) ? 0 : 1) : // leftSensorValue = 1
 			((rightSensorValue) ? 2 : 3); // leftSensorValue = 0
 
+  //print out values for testing 
 	Serial.println(distance);
 	Serial.println(state);
 	switch (state) {
 
+  //go straight if no path
 	case 0: // 1 : 1
 		if (SideRightSensorValue) {
 			turnRightCont(leftSensorValue, rightSensorValue);
@@ -71,15 +76,19 @@ void loop() {
 		} // straight
 
 		break;
+
+  //turn the robot left
 	case 1: // 1 : 0
 		left(); // Left
-
 		break;
+
+  //turn the robot right
 	case 2: // 0 : 1
 		right(); // Right
 
 		break;
 
+  //stop the robot
 	case 3: // 0 : 0
 
 		stop(); //Stop
@@ -96,6 +105,7 @@ void loop() {
 }
 
 void pinSetup() {
+  //Pin Setup
 	pinMode(motorA1, OUTPUT);
 	pinMode(motorA2, OUTPUT);
 	pinMode(motorB1, OUTPUT);
@@ -112,6 +122,7 @@ void pinSetup() {
 }
 test(pinSetup) {
 
+  //test pins using assertEqual
 	assertEqual(motorA1, 5);
 	assertEqual(readPinMode(motorA1), 0x1);
 	assertEqual(motorA2, 6);
@@ -139,4 +150,3 @@ test(pinSetup) {
 	assertEqual(echoPin, 4);
 	assertEqual(readPinMode(echoPin), 0x0);
 }
-

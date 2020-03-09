@@ -63,8 +63,8 @@ void stop() {
 	digitalWrite(motorB1, LOW);
 	digitalWrite(motorB2, LOW);
 }
-;
 
+//logic to turn left
 void left() {
 	digitalWrite(motorA1, LOW);
 	digitalWrite(motorA2, LOW);
@@ -73,7 +73,7 @@ void left() {
 	  pathArray[index] = "Left";
 	    index++;
 }
-
+//logic to turn right
 void right() {
 	digitalWrite(motorA1, LOW);
 	analogWrite(motorA2, 150);
@@ -83,7 +83,7 @@ void right() {
 	    index++;
 }
 
-
+//logic to turn go straight
 void straight() {
 	digitalWrite(motorA1, LOW);
 	digitalWrite(motorA2, HIGH);
@@ -92,7 +92,7 @@ void straight() {
 }
 
 
-
+//logic to turn right till it reenters maze
 void turnRightCont(int leftSensorValue, int rightSensorValue) {
 	right();
 	delay(1000);
@@ -105,7 +105,7 @@ void turnRightCont(int leftSensorValue, int rightSensorValue) {
 }
 
 
-
+//logic to left right till it reenters maze
 void turnLeftCont(int leftSensorValue, int rightSensorValue) {
 
 	left();
@@ -118,6 +118,7 @@ void turnLeftCont(int leftSensorValue, int rightSensorValue) {
 
 }
 
+//prints stored map
 void printArray(){
   String path = "";
   for(int i=0; i<= index; i++){

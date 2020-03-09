@@ -1,5 +1,5 @@
 //Include files
-#include <Arduino.h>
+//#include <Arduino.h>
 //#include <AUnit.h>
 //using namespace aunit;
 #include <ArduinoUnit.h>
@@ -31,13 +31,13 @@ void setup() {
 
 	uint8_t T = 10;
 	while (T > 0) {
-		T = T - 1;
+		T--;
 		Test::run();
 		//	Test::out= &Serial; //ArduinoUnit.h only
 
 	}; // UNIT TEST
 	delay(setupDelay);
-	wdt_enable(WDTO_250MS);
+	wdt_enable(WDTO_1S);
 
 }
 
@@ -69,15 +69,19 @@ void loop() {
 	case 0: // 1 : 1
 		if (SideRightSensorValue) {
 			turnRightCont(leftSensorValue, rightSensorValue);
+     pathArray[index] = "Right";
+     index++;
 		} else if (SideLeftSensorValue) {
 			turnLeftCont(leftSensorValue, rightSensorValue);
+      pathArray[index] = "Left";
+      index++;
 		} else {
 			straight();
 		} // straight
 
 		break;
 
-  //turn the robot left
+  //Adjust turn the robot left
 	case 1: // 1 : 0
 		left(); // Left
 		break;

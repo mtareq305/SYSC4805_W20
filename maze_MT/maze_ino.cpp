@@ -38,7 +38,8 @@ void setup() {
 
 	}; // UNIT TEST
 	delay(setupDelay);
-	wdt_enable(WDTO_250MS);
+	wdt_enable(WDTO_1S); //WDTO_1S
+
 
 }
 

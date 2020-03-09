@@ -3,7 +3,6 @@
  * maze_v2.cpp
  *
  *  Created on: Feb 24, 2020
- *      Author: muhammadtarequzzaman
  */
 
 #include <Arduino.h>

@@ -7,8 +7,6 @@
 #include <avr/wdt.h>
 
 /*
- *Author: Muhammad TareqUzzaman
- *
  *Added Test case for Pin set up
  *Added "maze_v2.h" for modularity and test
  * */

@@ -59,27 +59,30 @@ double sonSen() {
 void stop() {
 	digitalWrite(motorA1, LOW);
 	digitalWrite(motorA2, LOW);
+  analogWrite(motorA2, LOW);
 	digitalWrite(motorB1, LOW);
 	digitalWrite(motorB2, LOW);
+  analogWrite(motorB2, LOW);
+  
 }
 ;
 
 void left() {
+  stop();
 	digitalWrite(motorA1, LOW);
 	digitalWrite(motorA2, LOW);
 	digitalWrite(motorB1, LOW);
 	analogWrite(motorB2, 150);
-	  pathArray[index] = "Left";
-	    index++;
+	  
 }
 
 void right() {
+  stop();
 	digitalWrite(motorA1, LOW);
 	analogWrite(motorA2, 150);
 	digitalWrite(motorB1, LOW);
 	digitalWrite(motorB2, LOW);
-	pathArray[index] = "Right";
-	    index++;
+	
 }
 
 
@@ -93,27 +96,26 @@ void straight() {
 
 
 void turnRightCont(int leftSensorValue, int rightSensorValue) {
+	stop();
 	right();
 	delay(1000);
 	do{ /*EXIT only when both 1  */ Serial.println(" TURN RIGHT");
-		}while(!(digitalRead(FrontOpticalSensorLeft) & digitalRead(FrontOpticalSensorRight) ));
+		}while(!(digitalRead(FrontOpticalSensorLeft) && digitalRead(FrontOpticalSensorRight) ));
 
-	pathArray[index] = "Right";
-	        index++;
+	
 
 }
 
 
 
 void turnLeftCont(int leftSensorValue, int rightSensorValue) {
-
+  stop();
 	left();
 	delay(1000);
 	do{ /*EXIT only when both 1  */ Serial.println(" TURN LEFT");
-	}while(!(digitalRead(FrontOpticalSensorLeft) & digitalRead(FrontOpticalSensorRight) ));
+	}while(!(digitalRead(FrontOpticalSensorLeft) && digitalRead(FrontOpticalSensorRight) ));
 
-	 pathArray[index] = "Left";
-	        index++;
+
 
 }
 

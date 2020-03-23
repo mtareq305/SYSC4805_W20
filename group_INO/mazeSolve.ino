@@ -15,8 +15,8 @@ const int FrontOpticalSensorRight   = 8;
 const int FrontOpticalSensorLeft   = 7;
 
 // Pins for Side IR Sensors
-const int SideOpticalSensorRight   = A0;
-const int SideOpticalSensorLeft   = A1;
+const int SideOpticalSensorRight   = A5;
+const int SideOpticalSensorLeft   = A6;
 
 const int trigPin = 3;
 const int echoPin = 4;

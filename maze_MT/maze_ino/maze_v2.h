@@ -3,6 +3,7 @@
  * maze_v2.cpp
  *
  *  Created on: Feb 24, 2020
+ *  Authors: Sammy Ibrahim, Jacob Martin, Ahmad Chaudhry
  */
 
 #include <Arduino.h>

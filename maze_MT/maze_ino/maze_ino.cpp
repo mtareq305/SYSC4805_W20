@@ -51,7 +51,8 @@
  *Added "maze_header.h" for modularity and test enabled functionality
  * */
 
-
+volatile unsigned long duration;
+volatile double distance;
 volatile uint8_t state;
 bool isDone = false;
 
@@ -160,6 +161,20 @@ void setup() {
 	//wdt_enable(WDTO_1S); // dont use this one for final version
 	WDT_Initializing_ResetTime(WDTO_2S); // recreated by MUHAMMAD TAREQUZZAMAN
 
+}
+
+double sonSen() {
+	digitalWrite(trigPin, LOW);
+	delayMicroseconds(2);
+	// Sets the trigPin on HIGH state for 10 micro seconds
+	digitalWrite(trigPin, HIGH);
+	delayMicroseconds(10);
+	digitalWrite(trigPin, LOW);
+	// Reads the echoPin, returns the sound wave travel time in microseconds
+	duration = pulseIn(echoPin, HIGH);
+	// Calculating the distance
+	distance = duration * 0.034 / 2;
+	return distance;
 }
 
 // the loop routine runs over and over again forever:

@@ -1,2 +1,2 @@
 eclipse.preferences.version=1
-libraries=["AUnit","ArduinoUnit"]
+libraries=["AUnit","Battery Sense","ArduinoUnit"]

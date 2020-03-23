@@ -1,22 +1,57 @@
 
 #include <Arduino.h>
-
 #include <ArduinoUnit.h>
 #include <avr/wdt.h>
 #include "maze_header.h"
 //#include <Battery.h>
 /*
- *Author:
- *Added Test case for Pin set up
- *Added "maze_v2.h" for modularity and test
- * */
-
-/*
- *
  *  "maze_header.h" has all the function
  //Constants
  SEE "maze_header.h
  */
+
+
+
+/*
+*Authors: Muhammad Tarequzzaman, Sammy Ibrahim, Jacob Martin, Ahmad Chaudhry
+
+ * */
+/*Who did what ?*/
+/*
+ *Author: Sammy Ibrahim,
+ *Responsible for the codes:
+ *
+ *Added
+*/
+
+/*
+ *Author: Jacob Martin
+ *Responsible for the codes:
+ *
+ *Added
+*/
+
+/*
+ *Author: Ahmad Chaudhry
+ *Responsible for the codes:
+ *
+ *Added
+*/
+
+/*
+ *Author: Muhammad Tarequzzaman 100954008
+ *Responsible for the codes:  ,
+ *
+ *Added Test case for Pin set up
+ *Added Test script on "test(pinSetup)
+ *Added void WDT_Initializing_ResetTime(uint8_t value)
+ *Added watchdog timer and interrupt ISR ISR(WDT_vect)
+ *Added void left360()
+ *Added switch case implementation in loop() from original group code.
+ *Added "maze_header.h" for modularity and test enabled functionality
+ * */
+
+
 volatile uint8_t state;
 bool isDone = false;
 
@@ -181,7 +216,8 @@ void loop() {
 		printArray();
 	}
 
-	wdt_reset(); // reboot
+	//wdt_reset(); // reboot
+	__asm__ __volatile__ ("wdr");//
 }
 
 test(pinSetup) {

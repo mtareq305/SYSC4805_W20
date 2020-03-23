@@ -3,7 +3,7 @@
  * maze_v2.cpp
  *
  *  Created on: Feb 24, 2020
- *      Author: muhammadtarequzzaman
+ *  Authors: Sammy Ibrahim, Jacob Martin, Ahmad Chaudhry
  */
 
 #include <Arduino.h>
@@ -60,30 +60,33 @@ double sonSen() {
 void stop() {
 	digitalWrite(motorA1, LOW);
 	digitalWrite(motorA2, LOW);
+  analogWrite(motorA2, LOW);
 	digitalWrite(motorB1, LOW);
 	digitalWrite(motorB2, LOW);
+  analogWrite(motorB2, LOW);
+  
 }
+;
 
-//logic to turn left
 void left() {
+  stop();
 	digitalWrite(motorA1, LOW);
 	digitalWrite(motorA2, LOW);
 	digitalWrite(motorB1, LOW);
 	analogWrite(motorB2, 150);
-	  pathArray[index] = "Left";
-	    index++;
+	  
 }
-//logic to turn right
+
 void right() {
+  stop();
 	digitalWrite(motorA1, LOW);
 	analogWrite(motorA2, 150);
 	digitalWrite(motorB1, LOW);
 	digitalWrite(motorB2, LOW);
-	pathArray[index] = "Right";
-	    index++;
+	
 }
 
-//logic to turn go straight
+
 void straight() {
 	digitalWrite(motorA1, LOW);
 	digitalWrite(motorA2, HIGH);
@@ -92,33 +95,31 @@ void straight() {
 }
 
 
-//logic to turn right till it reenters maze
+
 void turnRightCont(int leftSensorValue, int rightSensorValue) {
+	stop();
 	right();
 	delay(1000);
 	do{ /*EXIT only when both 1  */ Serial.println(" TURN RIGHT");
-		}while(!(digitalRead(FrontOpticalSensorLeft) & digitalRead(FrontOpticalSensorRight) ));
+		}while(!(digitalRead(FrontOpticalSensorLeft) && digitalRead(FrontOpticalSensorRight) ));
 
-	pathArray[index] = "Right";
-	        index++;
+	
 
 }
 
 
-//logic to left right till it reenters maze
-void turnLeftCont(int leftSensorValue, int rightSensorValue) {
 
+void turnLeftCont(int leftSensorValue, int rightSensorValue) {
+  stop();
 	left();
 	delay(1000);
 	do{ /*EXIT only when both 1  */ Serial.println(" TURN LEFT");
-	}while(!(digitalRead(FrontOpticalSensorLeft) & digitalRead(FrontOpticalSensorRight) ));
+	}while(!(digitalRead(FrontOpticalSensorLeft) && digitalRead(FrontOpticalSensorRight) ));
 
-	 pathArray[index] = "Left";
-	        index++;
+
 
 }
 
-//prints stored map
 void printArray(){
   String path = "";
   for(int i=0; i<= index; i++){

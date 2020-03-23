@@ -1,5 +1,6 @@
 /*
 SYSC4805 B'dazzled Blue Maze Solver Robot Main Code
+Authors: Sammy Ibrahim, Jacob Martin, Ahmad Chaudhry
 */
 
 // Pins for the Mototr A

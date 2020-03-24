@@ -12,7 +12,7 @@ const int motorB1      = 11;
 const int motorB2      = 10;
 
 // Pins for Front IR Sensors
-const int FrontOpticalSensorRight   = 8;
+const int FrontOpticalSensorRight   = 6;
 const int FrontOpticalSensorLeft   = 7;
 
 // Pins for Side IR Sensors

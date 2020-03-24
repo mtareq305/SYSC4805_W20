@@ -50,9 +50,9 @@
  *Added switch case implementation in loop() from original group code.
  *Added "maze_header.h" for modularity and test enabled functionality
  * */
-
+/**/
 volatile unsigned long duration;
-volatile double distance;
+volatile unsigned long distance;
 volatile uint8_t state;
 bool isDone = false;
 

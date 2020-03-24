@@ -25,8 +25,7 @@
 #define  trigPin  3
 #define  echoPin  4
 
-volatile unsigned long duration;
-volatile double distance;
+
 
 volatile uint8_t leftSensorValue;
 volatile uint8_t rightSensorValue;
@@ -37,7 +36,7 @@ volatile uint8_t SideLeftSensorValue;
 
 String pathArray[40];
 volatile uint8_t index = 0;
-
+/***************************************************************************/
 double sonSen();
 void pinSetup();
 uint8_t readPinMode(uint8_t pin);

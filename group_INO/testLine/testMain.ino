@@ -14,7 +14,7 @@ const int opticalSensorFrontLeft   = 7;
 
 // Pins for Side IR Sensors
 const int SideOpticalSensorRight   = A5;
-const int SideOpticalSensorLeft   = A6;
+const int SideOpticalSensorLeft   = A4;
 
 const int trigPin = 3;
 const int echoPin = 4;
@@ -238,9 +238,6 @@ void loop() {
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
     digitalWrite (motorB2,LOW);
-  }
-  if(isDone){
-    printArray();
   }
 
 }

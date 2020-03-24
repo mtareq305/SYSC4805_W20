@@ -213,25 +213,25 @@ void loop() {
    }
   
   //go Right
-   if(leftSensorValue==1 && rightSensorValue==1){
+   if(leftSensorValueFront==1 && rightSensorValueFront==1){
     digitalWrite (motorA1,LOW);
     digitalWrite (motorA2,HIGH);
     digitalWrite (motorB1,LOW);
     digitalWrite (motorB2,HIGH);
   }
-  if(leftSensorValue==0 && rightSensorValue==1){
+  if(leftSensorValueFront==0 && rightSensorValueFront==1){
     digitalWrite (motorA1,LOW);
     analogWrite (motorA2,150);
     digitalWrite (motorB1,LOW);
     digitalWrite (motorB2,LOW);
   }
-  if(leftSensorValue==1 && rightSensorValue==0){
+  if(leftSensorValueFront==1 && rightSensorValueFront==0){
     digitalWrite (motorA1,LOW);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
     analogWrite (motorB2,150);
   }
-  if(leftSensorValue==0 && rightSensorValue==0){
+  if(leftSensorValueFront==0 && rightSensorValueFront==0){
     digitalWrite (motorA1,LOW);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);

@@ -101,7 +101,7 @@ This method is used to make the robot turn right until it is back on the black t
 @param leftSensorValue: data collected from the sensor on the left side of the robot (1-> turn left).
 @param rightSensorValue: data collected from the sensor on the right side of the robot
 */
-void turnRight(int leftSensorValue, int rightSensorValue) {
+void turnRight() {
     digitalWrite (motorA1,LOW);
     analogWrite (motorA2,150);
     digitalWrite (motorB1,LOW);
@@ -124,7 +124,7 @@ This method is used to make the robot turn left until it is back on the black ta
 @param leftSensorValue: data collected from the sensor on the left side of the robot (1-> turn left).
 @param rightSensorValue: data collected from the sensor on the right side of the robot
 */
-void turnLeft(int leftSensorValue, int rightSensorValue) {
+void turnLeft() {
     digitalWrite (motorA1,LOW);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
@@ -201,15 +201,15 @@ void loop() {
   //go straigh
   Serial.println(distance);
   if(distance <= 15) {
-    turnRight(leftSensorValue, rightSensorValue);
+    turnRight();
     pathArray[index] = "TurnAround";
     index++; 
   }
 
    if(SideRightSensorValue){
-       turnRight(leftSensorValue, rightSensorValue);
+       turnRight();
    } else if(SideLeftSensorValue){
-       turnLeft(leftSensorValue, rightSensorValue);
+       turnLeft();
    }
   
   //go Right

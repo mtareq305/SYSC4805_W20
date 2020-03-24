@@ -109,8 +109,8 @@ void turnRight(int leftSensorValue, int rightSensorValue) {
     delay(1000);
     while(true) {
       Serial.println("STUCK TURN RIFGHT");
-      int leftSensorValue = digitalRead(FrontOpticalSensorLeft);
-      int rightSensorValue = digitalRead(FrontOpticalSensorRight);
+      int leftSensorValue = digitalRead(opticalSensorFrontLeft);
+      int rightSensorValue = digitalRead(opticalSensorFrontRight);
       if(leftSensorValue==1 && rightSensorValue==1) {
         pathArray[index] = "Right";
         index++; 
@@ -132,8 +132,8 @@ void turnLeft(int leftSensorValue, int rightSensorValue) {
     delay(1000);
     while(true) {
       Serial.println("STUCK TURN LEFT");
-      int leftSensorValue = digitalRead(FrontOpticalSensorLeft);
-      int rightSensorValue = digitalRead(FrontOpticalSensorRight);
+      int leftSensorValue = digitalRead(opticalSensorFrontLeft);
+      int rightSensorValue = digitalRead(opticalSensorFrontRight);
       if(leftSensorValue==1 && rightSensorValue==1) {
         pathArray[index] = "Left";
         index++;
@@ -162,7 +162,7 @@ void printArray(){
       path.concat(" W ");
     }
   }
-  serial.println(path);
+  Serial.println(path);
 }
 
 

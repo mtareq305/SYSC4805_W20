@@ -6,9 +6,9 @@
 
 #include <Arduino.h>
 
-//Constants
+//define and volatile variable
 #define Baudrate 9600
-#define setupDelay 3000
+#define setupDelay 1000
 
 #define  motorA1 5
 #define  motorA2 6
@@ -25,39 +25,23 @@
 #define  trigPin  3
 #define  echoPin  4
 
-
-
 volatile uint8_t leftSensorValue;
 volatile uint8_t rightSensorValue;
 volatile uint8_t SideRightSensorValue;
 volatile uint8_t SideLeftSensorValue;
 
-
-
+// Array of Strings recording the path taken (printed to LCD).
 String pathArray[40];
-volatile uint8_t index = 0;
+uint8_t index = 0;
 /***************************************************************************/
-double sonSen();
+
 void pinSetup();
 uint8_t readPinMode(uint8_t pin);
 void WDT_Initializing_ResetTime(uint8_t value);
 /****************************************************************************/
-volatile unsigned long duration;
-volatile unsigned long distance;
-double sonSen() {
-	digitalWrite(trigPin, LOW);
-	delayMicroseconds(2);
-	// Sets the trigPin on HIGH state for 10 micro seconds
-	digitalWrite(trigPin, HIGH);
-	delayMicroseconds(10);
-	digitalWrite(trigPin, LOW);
-	// Reads the echoPin, returns the sound wave travel time in microseconds
-	duration = pulseIn(echoPin, HIGH);
-	// Calculating the distance
-	distance = duration * 0.034 / 2;
-	return distance;
-}
 
+/*Stop all motor function
+ * */
 void stop() {
 	digitalWrite(motorA1, LOW);
 	digitalWrite(motorA2, LOW);
@@ -68,7 +52,9 @@ void stop() {
 
 }
 ;
-
+/*
+This method is used to make the robot fix up its path (left) if it has left the path.
+*/
 void left() {
 	stop();
 	digitalWrite(motorA1, LOW);
@@ -77,7 +63,7 @@ void left() {
 	analogWrite(motorB2, 150);
 
 }
-
+/* Turn left 360 angle*/
 void left360() {
 	/* Author: Muhammad Tarequzzaman|100954008
 	 *
@@ -91,7 +77,9 @@ void left360() {
 	analogWrite(motorB2, 150);
 
 }
-
+/*
+This method is used to make the robot fix up its path (right) if it has left the path.
+*/
 void right() {
 	stop();
 	digitalWrite(motorA1, LOW);
@@ -101,13 +89,19 @@ void right() {
 
 }
 
+/*
+This method is used to make the robot go straight.
+*/
 void straight() {
 	digitalWrite(motorA1, LOW);
 	digitalWrite(motorA2, HIGH);
 	digitalWrite(motorB1, LOW);
 	digitalWrite(motorB2, HIGH);
 }
-
+/*
+This method is used to make the robot turn left until it is back on the black tape path.
+@param delayTime: delay required to turn right successfully
+*/
 void turnRightCont(uint8_t delayTime) {
 
 	right();
@@ -119,6 +113,10 @@ void turnRightCont(uint8_t delayTime) {
 
 }
 
+/*
+This method is used to make the robot turn left until it is back on the black tape path.
+@param delayTime: delay required to turn left successfully
+*/
 void turnLeftCont(uint8_t delayTime) {
 
 	left();
@@ -130,23 +128,27 @@ void turnLeftCont(uint8_t delayTime) {
 
 }
 
-void printArray() {
-	String path = "";
-	for (int i = 0; i <= index; i++) {
-		if (pathArray[i] == "Left") {
-			path.concat("<-,");
-		}
-		if (pathArray[i] == "Right") {
-			path.concat("->,");
-		}
-		if (pathArray[i] == "Straight") {
-			path.concat(" |^ ");
-		}
-		if (pathArray[i] == "TurnAround") {
-			path.concat(" W ");
-		}
-	}
-	Serial.println(path);
+/*
+This method is used to print out the successful path from the Maze Solving.
+The Robot keeps track of the turns it takes (and any intersections) in an array of Strings (pathArray).
+*/
+void printArray(){
+  String path = "";
+  for(int i=0; i<= index; i++){
+    if(pathArray[i] == "Left"){
+      path.concat("<-,");
+    }
+    if(pathArray[i] == "Right"){
+      path.concat("->,");
+    }
+    if(pathArray[i] == "Straight"){
+      path.concat(" |^ ");
+    }
+    if(pathArray[i] == "TurnAround"){
+      path.concat(" W ");
+    }
+  }
+  Serial.println(path);
 }
 
 uint8_t readPinMode(uint8_t pin) {

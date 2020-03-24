@@ -178,11 +178,15 @@ void loop() {
   Serial.print("left Sensor: ");
   Serial.println(leftSensorValueFront);
   Serial.print("right Sensor: ");
-  Serial.println(rightSensorValueFront);
-  
+  Serial.println(rightSensorValueFront);  
   
   int SideRightSensorValue = digitalRead(SideOpticalSensorRight);
   int SideLeftSensorValue = digitalRead(SideOpticalSensorLeft);
+
+  Serial.print("side left Sensor: ");
+  Serial.println(SideLeftSensorValue);
+  Serial.print("side right Sensor: ");
+  Serial.println(SideRightSensorValue);
 
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -200,11 +204,11 @@ void loop() {
   // Follow Line Logic 
   //go straigh
   Serial.println(distance);
-  if(distance <= 15) {
-    turnRight();
-    pathArray[index] = "TurnAround";
-    index++; 
-  }
+//  if(distance <= 15) {
+//    turnRight();
+//    pathArray[index] = "TurnAround";
+//    index++; 
+//  }
 
    if(SideRightSensorValue){
        turnRight();

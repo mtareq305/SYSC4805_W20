@@ -51,8 +51,7 @@
  *Added "maze_header.h" for modularity and test enabled functionality
  * */
 /**/
-volatile unsigned long duration;
-volatile unsigned long distance;
+
 volatile uint8_t state;
 bool isDone = false;
 
@@ -163,19 +162,7 @@ void setup() {
 
 }
 
-double sonSen() {
-	digitalWrite(trigPin, LOW);
-	delayMicroseconds(2);
-	// Sets the trigPin on HIGH state for 10 micro seconds
-	digitalWrite(trigPin, HIGH);
-	delayMicroseconds(10);
-	digitalWrite(trigPin, LOW);
-	// Reads the echoPin, returns the sound wave travel time in microseconds
-	duration = pulseIn(echoPin, HIGH);
-	// Calculating the distance
-	distance = duration * 0.034 / 2;
-	return distance;
-}
+
 
 // the loop routine runs over and over again forever:
 void loop() {
@@ -193,9 +180,11 @@ void loop() {
 	}
 	state = (leftSensorValue) ? ((rightSensorValue) ? 0 : 1) : // leftSensorValue = 1
 			((rightSensorValue) ? 2 : 3); // leftSensorValue = 0
-
+	Serial.println("distance");
 	Serial.println(distance);
+	Serial.println("state");
 	Serial.println(state);
+	Serial.println("------");
 	switch (state) {
 
 	case 0: // 1 : 1

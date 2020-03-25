@@ -231,13 +231,15 @@ void loop() {
 //    pathArray[index] = "TurnAround";
 //    index++; 
 //  }
-
+ if(leftSensorValueFront == rightSensorValueFront){
+  
    if(SideRightSensorValue){
        turnRight();
    } else if(SideLeftSensorValue){
        turnLeft();
    }
   
+ }
   //go Right
    if(leftSensorValueFront==1 && rightSensorValueFront==1){
     digitalWrite (motorA1,LOW);

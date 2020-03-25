@@ -97,11 +97,11 @@ void straight() {
 }
 
 /*
-This method is used to make the robot turn right until it is back on the black tape path. 
+This method is used to make the robot turn left until it is back on the black tape path. 
 @param leftSensorValue: data collected from the sensor on the left side of the robot (1-> turn left).
 @param rightSensorValue: data collected from the sensor on the right side of the robot
 */
-void turnRight() {
+void turnLeft() {
     digitalWrite (motorA1,LOW);
     analogWrite (motorA2,150);
     digitalWrite (motorB1,LOW);
@@ -120,11 +120,11 @@ void turnRight() {
 }
 
 /*
-This method is used to make the robot turn left until it is back on the black tape path. 
+This method is used to make the robot turn right until it is back on the black tape path. 
 @param leftSensorValue: data collected from the sensor on the left side of the robot (1-> turn left).
 @param rightSensorValue: data collected from the sensor on the right side of the robot
 */
-void turnLeft() {
+void turnRight() {
     digitalWrite (motorA1,LOW);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
@@ -142,6 +142,28 @@ void turnLeft() {
     }
 }
 
+/*
+This method is used to make the robot turn around until it is back on the black tape path. 
+@param leftSensorValue: data collected from the sensor on the left side of the robot (1-> turn left).
+@param rightSensorValue: data collected from the sensor on the right side of the robot
+*/
+void turnAround() {
+    digitalWrite (motorA1,HIGH);
+    digitalWrite (motorA2,LOW);
+    digitalWrite (motorB1,LOW);
+    digitalWrite (motorB2,HIGH);
+    delay(1000);
+    while(true) {
+      Serial.println("STUCK TURN LEFT");
+      int leftSensorValue = digitalRead(opticalSensorFrontLeft);
+      int rightSensorValue = digitalRead(opticalSensorFrontRight);
+      if(leftSensorValue==1 && rightSensorValue==1) {
+        pathArray[index] = "Left";
+        index++;
+        return;
+      }
+    }
+}
 /*
 This method is used to print out the successful path from the Maze Solving.
 The Robot keeps track of the turns it takes (and any intersections) in an array of Strings (pathArray).
@@ -236,10 +258,7 @@ void loop() {
     analogWrite (motorB2,150);
   }
   if(leftSensorValueFront==0 && rightSensorValueFront==0){
-    digitalWrite (motorA1,LOW);
-    digitalWrite (motorA2,LOW);
-    digitalWrite (motorB1,LOW);
-    digitalWrite (motorB2,LOW);
+    turnAround();
   }
 
 }

@@ -70,7 +70,7 @@ void left() {
     digitalWrite (motorA1,LOW);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
-    analogWrite (motorB2,150);
+    analogWrite (motorB2,120);
     pathArray[index] = "Left";
     index++; 
 }
@@ -80,7 +80,7 @@ This method is used to make the robot fix up its path (right) if it has left the
 */
 void right() {
     digitalWrite (motorA1,LOW);
-    analogWrite (motorA2,150);
+    analogWrite (motorA2,120);
     digitalWrite (motorB1,LOW);
     digitalWrite (motorB2,LOW);
     pathArray[index] = "Right";
@@ -106,7 +106,7 @@ This method is used to make the robot turn left until it is back on the black ta
 */
 void turnLeft() {
     digitalWrite (motorA1,LOW);
-    analogWrite (motorA2,200);
+    analogWrite (motorA2,140);
     digitalWrite (motorB1,LOW);
     digitalWrite (motorB2,LOW);
     delay(1000);
@@ -115,7 +115,7 @@ void turnLeft() {
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);
       int rightSensorValue = digitalRead(opticalSensorFrontRight);
       if(rightSensorValue==1) {
-        pathArray[index] = "Right";
+        pathArray[index] = "Left";
         index++; 
         return;
       }
@@ -131,14 +131,14 @@ void turnRight() {
     digitalWrite (motorA1,LOW);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
-    analogWrite (motorB2,200);
+    analogWrite (motorB2,140);
     delay(1000);
     while(true) {
       Serial.println("STUCK TURN RIGHT");
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);
       int rightSensorValue = digitalRead(opticalSensorFrontRight);
       if(leftSensorValue==1) {
-        pathArray[index] = "Left";
+        pathArray[index] = "Right";
         index++;
         return;
       }
@@ -151,20 +151,16 @@ This method is used to make the robot turn around until it is back on the black 
 @param rightSensorValue: data collected from the sensor on the right side of the robot
 */
 void turnAround() {
-    analogWrite (motorA1,200);
+    analogWrite (motorA1,150);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
-    analogWrite (motorB2,200);
+    analogWrite (motorB2,150);
     delay(1000);
     while(true) {
       Serial.println("STUCK TURN AROUND");
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);
       int rightSensorValue = digitalRead(opticalSensorFrontRight);
-      if(leftSensorValue==1 && rightSensorValue==1) {
-        pathArray[index] = "Left";
-        index++;
         return;
-      }
     }
 }
 /*
@@ -183,7 +179,7 @@ void printArray(){
     if(pathArray[i] == "Straight"){
       path.concat(" |^ ");
     }
-    if(pathArray[i] == "TurnAround"){
+    if(pathArray[i] == "Finished"){
       path.concat(" W ");
     }
   }
@@ -229,24 +225,24 @@ void loop() {
   // Follow Line Logic 
   //go straigh
   Serial.println(distance);
-  if(distance <= 20) {
-    stop();
-    pathArray[index] = "TurnAround";
-    index++; 
-  }
+//  if(distance <= 20) {
+//    stop();
+//    pathArray[index] = "Finished";
+//    index++; 
+//  }
 // if(leftSensorValueFront == rightSensorValueFront){
 //   
 // }
   //go Right
    if(leftSensorValueFront==1 && rightSensorValueFront==1){
     analogWrite (motorA1,0);
-    analogWrite (motorA2,200);
+    analogWrite (motorA2,180);
     analogWrite (motorB1,0);
-    analogWrite (motorB2,200);
+    analogWrite (motorB2,180);
   }
   if(leftSensorValueFront==0 && rightSensorValueFront==1){
     digitalWrite (motorA1,LOW);
-    analogWrite (motorA2,200);
+    analogWrite (motorA2,150);
     digitalWrite (motorB1,LOW);
     digitalWrite (motorB2,LOW);
   }
@@ -254,14 +250,19 @@ void loop() {
     digitalWrite (motorA1,LOW);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
-    analogWrite (motorB2,200);
+    analogWrite (motorB2,150);
   }
-  if(leftSensorValueFront==0 && rightSensorValueFront==0){
-    turnAround();
-  }
-  if(SideRightSensorValue){
+  
+  if(SideRightSensorValue && !SideLeftSensorValue){
        turnRight();
-   } else if(SideLeftSensorValue){
+   } else if(SideLeftSensorValue && !SideRightSensorValue){
        turnLeft();
    }
+   
+  if(leftSensorValueFront==0 && rightSensorValueFront==0){
+    delay(300);
+    if(leftSensorValueFront==0 && rightSensorValueFront==0){
+    turnAround();
+    }
+  }
 }

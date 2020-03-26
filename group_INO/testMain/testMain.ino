@@ -151,10 +151,10 @@ This method is used to make the robot turn around until it is back on the black 
 @param rightSensorValue: data collected from the sensor on the right side of the robot
 */
 void turnAround() {
-    analogWrite (motorA1,150);
+    analogWrite (motorA1,170);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
-    analogWrite (motorB2,150);
+    analogWrite (motorB2,170);
     delay(1000);
     while(true) {
       Serial.println("STUCK TURN AROUND");
@@ -242,7 +242,7 @@ void loop() {
   }
   if(leftSensorValueFront==0 && rightSensorValueFront==1){
     digitalWrite (motorA1,LOW);
-    analogWrite (motorA2,150);
+    analogWrite (motorA2,140);
     digitalWrite (motorB1,LOW);
     digitalWrite (motorB2,LOW);
   }
@@ -250,7 +250,7 @@ void loop() {
     digitalWrite (motorA1,LOW);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
-    analogWrite (motorB2,150);
+    analogWrite (motorB2,140);
   }
   
   if(SideRightSensorValue && !SideLeftSensorValue){

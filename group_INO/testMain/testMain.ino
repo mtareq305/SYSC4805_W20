@@ -150,11 +150,11 @@ This method is used to make the robot turn around until it is back on the black 
 @param rightSensorValue: data collected from the sensor on the right side of the robot
 */
 void turnAround() {
-    analogWrite (motorA1,170);
+    analogWrite (motorA1,150);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
-    analogWrite (motorB2,170);
-    delay(1000);
+    analogWrite (motorB2,150);
+    delay(500);
     while(true) {
       Serial.println("STUCK TURN AROUND");
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);

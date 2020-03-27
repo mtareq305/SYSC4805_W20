@@ -26,13 +26,14 @@ bool isDone = false;
 
 // Array of Strings recording the path taken (printed to LCD).
 String pathArray [40];
+String currentDirection;
 int index = 0; 
 
 /*
 This method is used to set up all the pins (for the HW Sensors) when the Robot is starting.
 */
 void setup() {
- pinMode(motorA1, OUTPUT);
+  pinMode(motorA1, OUTPUT);
   pinMode(motorA2, OUTPUT);
   pinMode(motorB1, OUTPUT);
   pinMode(motorB2, OUTPUT);
@@ -49,6 +50,16 @@ void setup() {
   Serial.begin(9600);
   delay(3000);
 }
+/*
+This method is used toupdate the robots path 
+*/
+void updatePath(String s) {
+  if (s != currentDirection) {
+      pathArray[index] = s;
+      index++;
+      currentDirection = s;
+  }
+}
 
 /*
 This method is used to stop the robot from moving (for when we reach the end). 
@@ -64,30 +75,6 @@ void stop() {
 };
 
 /*
-This method is used to make the robot fix up its path (left) if it has left the path. And record it in the array of paths. 
-*/
-void left() {
-    digitalWrite (motorA1,LOW);
-    digitalWrite (motorA2,LOW);
-    digitalWrite (motorB1,LOW);
-    analogWrite (motorB2,120);
-    pathArray[index] = "Left";
-    index++; 
-}
-
-/*
-This method is used to make the robot fix up its path (right) if it has left the path. And record it in the array of paths. 
-*/
-void right() {
-    digitalWrite (motorA1,LOW);
-    analogWrite (motorA2,120);
-    digitalWrite (motorB1,LOW);
-    digitalWrite (motorB2,LOW);
-    pathArray[index] = "Right";
-    index++; 
-}
-
-/*
 This method is used to make the robot go straight. And record it in the array of paths. 
 */
 void straight() {
@@ -95,7 +82,7 @@ void straight() {
     analogWrite (motorA2,180);
     analogWrite (motorB1,0);
     analogWrite (motorB2,180);
-    pathArray[index] = "Straight";
+    updatePath("Straight");
     index++; 
 }
 
@@ -115,8 +102,7 @@ void turnLeft() {
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);
       int rightSensorValue = digitalRead(opticalSensorFrontRight);
       if(rightSensorValue==1) {
-        pathArray[index] = "Left";
-        index++; 
+        updatePath("Left");
         return;
       }
     }
@@ -138,8 +124,7 @@ void turnRight() {
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);
       int rightSensorValue = digitalRead(opticalSensorFrontRight);
       if(leftSensorValue==1) {
-        pathArray[index] = "Right";
-        index++;
+        updatePath("Right");
         return;
       }
     }

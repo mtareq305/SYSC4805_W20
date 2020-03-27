@@ -79,9 +79,9 @@ This method is used to make the robot go straight. And record it in the array of
 */
 void straight() {
     analogWrite (motorA1,0);
-    analogWrite (motorA2,180);
+    analogWrite (motorA2,140);
     analogWrite (motorB1,0);
-    analogWrite (motorB2,180);
+    analogWrite (motorB2,140);
     updatePath("Straight");
     index++; 
 }
@@ -96,12 +96,12 @@ void turnLeft() {
     analogWrite (motorA2,140);
     digitalWrite (motorB1,LOW);
     digitalWrite (motorB2,LOW);
-    delay(1000);
+    delay(550);
     while(true) {
       Serial.println("STUCK TURN LEFT");
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);
       int rightSensorValue = digitalRead(opticalSensorFrontRight);
-      if(rightSensorValue==1) {
+      if(rightSensorValue==1 && leftSensorValue == 1) {
         updatePath("Left");
         return;
       }
@@ -118,7 +118,7 @@ void turnRight() {
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
     analogWrite (motorB2,140);
-    delay(1000);
+    delay(600);
     while(true) {
       Serial.println("STUCK TURN RIGHT");
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);
@@ -132,7 +132,7 @@ void turnRight() {
 
 void fixL(){
  digitalWrite (motorA1,LOW);
-  analogWrite (motorA2,140);
+  analogWrite (motorA2,120);
   digitalWrite (motorB1,LOW);
   digitalWrite (motorB2,LOW);
 }
@@ -141,7 +141,7 @@ void fixR(){
     digitalWrite (motorA1,LOW);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
-    analogWrite (motorB2,140);
+    analogWrite (motorB2,120);
 }
 
 /*
@@ -150,16 +150,18 @@ This method is used to make the robot turn around until it is back on the black 
 @param rightSensorValue: data collected from the sensor on the right side of the robot
 */
 void turnAround() {
-    analogWrite (motorA1,150);
+    analogWrite (motorA1,160);
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
-    analogWrite (motorB2,150);
-    delay(500);
+    analogWrite (motorB2,130);
+    delay(400);
     while(true) {
       Serial.println("STUCK TURN AROUND");
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);
       int rightSensorValue = digitalRead(opticalSensorFrontRight);
+      if (leftSensorValue == 1 && rightSensorValue == 1) {
         return;
+      }
     }
 }
 /*
@@ -245,14 +247,15 @@ void loop() {
   
   if(SideRightSensorValue && !SideLeftSensorValue){
        turnRight();
-   } else if(SideLeftSensorValue && !SideRightSensorValue){
-       turnLeft();
+   }
+   if(SideLeftSensorValue && !SideRightSensorValue){
+      turnLeft();
    }
    
   if(leftSensorValueFront==0 && rightSensorValueFront==0){
-    delay(300);
-    if(leftSensorValueFront==0 && rightSensorValueFront==0){
+    delay(100);
+    if (leftSensorValueFront==0 && rightSensorValueFront==0){
     turnAround();
     }
-  }
+    }
 }

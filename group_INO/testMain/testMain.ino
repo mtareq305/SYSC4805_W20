@@ -160,6 +160,7 @@ void turnAround() {
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);
       int rightSensorValue = digitalRead(opticalSensorFrontRight);
       if (leftSensorValue == 1 && rightSensorValue == 1) {
+        updatePath("Back");
         return;
       }
     }
@@ -172,16 +173,19 @@ void printArray(){
   String path = ""; 
   for(int i=0; i<= index; i++){
     if(pathArray[i] == "Left"){
-      path.concat("<-,");
+      path.concat("L");
     }
     if(pathArray[i] == "Right"){
-      path.concat("->,");
+      path.concat("R");
     }
     if(pathArray[i] == "Straight"){
-      path.concat(" |^ ");
+      path.concat("S");
+    }
+    if(pathArray[i] == "Back"){
+      path.concat("B");
     }
     if(pathArray[i] == "Finished"){
-      path.concat(" W ");
+      path.concat("F");
     }
   }
   Serial.println(path);

@@ -91,10 +91,10 @@ void right() {
 This method is used to make the robot go straight. And record it in the array of paths. 
 */
 void straight() {
-    digitalWrite (motorA1,LOW);
-    digitalWrite (motorA2,HIGH);
-    digitalWrite (motorB1,LOW);
-    digitalWrite (motorB2,HIGH);
+    analogWrite (motorA1,0);
+    analogWrite (motorA2,180);
+    analogWrite (motorB1,0);
+    analogWrite (motorB2,180);
     pathArray[index] = "Straight";
     index++; 
 }
@@ -143,6 +143,20 @@ void turnRight() {
         return;
       }
     }
+}
+
+void fixL(){
+ digitalWrite (motorA1,LOW);
+  analogWrite (motorA2,140);
+  digitalWrite (motorB1,LOW);
+  digitalWrite (motorB2,LOW);
+}
+
+void fixR(){
+    digitalWrite (motorA1,LOW);
+    digitalWrite (motorA2,LOW);
+    digitalWrite (motorB1,LOW);
+    analogWrite (motorB2,140);
 }
 
 /*
@@ -235,22 +249,13 @@ void loop() {
 // }
   //go Right
    if(leftSensorValueFront==1 && rightSensorValueFront==1){
-    analogWrite (motorA1,0);
-    analogWrite (motorA2,180);
-    analogWrite (motorB1,0);
-    analogWrite (motorB2,180);
+    straight();
   }
   if(leftSensorValueFront==0 && rightSensorValueFront==1){
-    digitalWrite (motorA1,LOW);
-    analogWrite (motorA2,140);
-    digitalWrite (motorB1,LOW);
-    digitalWrite (motorB2,LOW);
+    fixL();
   }
   if(leftSensorValueFront==1 && rightSensorValueFront==0){
-    digitalWrite (motorA1,LOW);
-    digitalWrite (motorA2,LOW);
-    digitalWrite (motorB1,LOW);
-    analogWrite (motorB2,140);
+    fixR();
   }
   
   if(SideRightSensorValue && !SideLeftSensorValue){

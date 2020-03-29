@@ -210,7 +210,10 @@ void printArray(){
       path.concat("F");
     }
   }
-  Serial.println(path);
+  lcd.setCursor(0,0);
+    for (int i=0; i<index; i++) {
+    lcd.print(path);
+    }
 }
 
 
@@ -255,16 +258,10 @@ void loop() {
   //if ultrasonic detects object within 20, it will stop. Maze is solved
   if(distance <= 20) {
     stop();
-    pathArray[index] = "Finished";
-    index++; 
-    lcd.setCursor(0,0);
-    for (int i=0; i<index; i++) {
-    lcd.print(pathArray[i]);
+    updatePath("Finished"); 
+    printArray();
     }
   }
-// if(leftSensorValueFront == rightSensorValueFront){
-//   
-// }
   //Both sensors are on black, go straight
    if(leftSensorValueFront==1 && rightSensorValueFront==1){
     straight();

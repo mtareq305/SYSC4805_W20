@@ -3,6 +3,11 @@ SYSC4805 B'dazzled Blue Maze Solver Robot Main Code
 Authors: Muhammmad Tarequzzaman, Samy Ibrahim, Jacob Martin, Ahmad Chaudhry
 */
 
+//library packages required for I2C communication for LCD screen
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+
+//constants for motors (left and right)
 const int motorA1      = 5;  
 const int motorA2      = 6; 
 
@@ -16,18 +21,24 @@ const int opticalSensorFrontLeft   = 7;
 const int SideOpticalSensorRight   = A5;
 const int SideOpticalSensorLeft   = A4;
 
+//pins for ultrasonic sensor
 const int trigPin = 3;
 const int echoPin = 4;
 
+//variables to calculate distance with ultrasonic
 long duration;
 double distance;
 
+//variable to confirm when maze finished
 bool isDone = false;
 
 // Array of Strings recording the path taken (printed to LCD).
 String pathArray [40];
 String currentDirection;
 int index = 0; 
+
+// set the LCD address to 0x27 for a 16 chars and 2 line display
+LiquidCrystal_I2C lcd(0x27,20,4);  
 
 /*
 This method is used to set up all the pins (for the HW Sensors) when the Robot is starting.
@@ -49,9 +60,11 @@ void setup() {
   // initialize serial communication at 9600 bits per second:
   Serial.begin(9600);
   delay(3000);
+
+  lcd.init();
 }
 /*
-This method is used toupdate the robots path 
+This method is used to update the robots path 
 */
 void updatePath(String s) {
   if (s != currentDirection) {
@@ -69,9 +82,10 @@ void stop() {
     digitalWrite (motorA2,LOW);
     digitalWrite (motorB1,LOW);
     digitalWrite (motorB2,LOW);
-    while (1) {
-      Serial.println(distance);
-    }
+    //while loop used for debugging errors 
+//    while (1) {
+//      Serial.println(distance);
+//    }
 };
 
 /*
@@ -88,8 +102,6 @@ void straight() {
 
 /*
 This method is used to make the robot turn left until it is back on the black tape path. 
-@param leftSensorValue: data collected from the sensor on the left side of the robot (1-> turn left).
-@param rightSensorValue: data collected from the sensor on the right side of the robot
 */
 void turnLeft() {
     digitalWrite (motorA1,LOW);
@@ -101,6 +113,7 @@ void turnLeft() {
       Serial.println("STUCK TURN LEFT");
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);
       int rightSensorValue = digitalRead(opticalSensorFrontRight);
+      //once robot is repositioned on path it will return 
       if(rightSensorValue==1 && leftSensorValue == 1) {
         updatePath("Left");
         return;
@@ -110,8 +123,6 @@ void turnLeft() {
 
 /*
 This method is used to make the robot turn right until it is back on the black tape path. 
-@param leftSensorValue: data collected from the sensor on the left side of the robot (1-> turn left).
-@param rightSensorValue: data collected from the sensor on the right side of the robot
 */
 void turnRight() {
     digitalWrite (motorA1,LOW);
@@ -123,6 +134,7 @@ void turnRight() {
       Serial.println("STUCK TURN RIGHT");
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);
       int rightSensorValue = digitalRead(opticalSensorFrontRight);
+      //once robot is repositioned on path it will return
       if(leftSensorValue==1) {
         updatePath("Right");
         return;
@@ -130,6 +142,9 @@ void turnRight() {
     }
 }
 
+/*
+This method is used to make the robot curve right to fix left lean. 
+*/
 void fixL(){
  digitalWrite (motorA1,LOW);
   analogWrite (motorA2,120);
@@ -137,6 +152,9 @@ void fixL(){
   digitalWrite (motorB2,LOW);
 }
 
+/*
+This method is used to make the robot curve left to fix right lean. 
+*/
 void fixR(){
     digitalWrite (motorA1,LOW);
     digitalWrite (motorA2,LOW);
@@ -146,8 +164,6 @@ void fixR(){
 
 /*
 This method is used to make the robot turn around until it is back on the black tape path. 
-@param leftSensorValue: data collected from the sensor on the left side of the robot (1-> turn left).
-@param rightSensorValue: data collected from the sensor on the right side of the robot
 */
 void turnAround() {
     analogWrite (motorA1,160);
@@ -159,6 +175,7 @@ void turnAround() {
       Serial.println("STUCK TURN AROUND");
       int leftSensorValue = digitalRead(opticalSensorFrontLeft);
       int rightSensorValue = digitalRead(opticalSensorFrontRight);
+      //once robot has found path it will turn back to loop
       if (leftSensorValue == 1 && rightSensorValue == 1) {
         updatePath("Back");
         return;
@@ -172,18 +189,23 @@ The Robot keeps track of the turns it takes (and any intersections) in an array 
 void printArray(){
   String path = ""; 
   for(int i=0; i<= index; i++){
+    //if robot has made a left turn add to path
     if(pathArray[i] == "Left"){
       path.concat("L");
     }
+    //if robot has made a right turn add to path
     if(pathArray[i] == "Right"){
       path.concat("R");
     }
+    //if robot is going straight add to path
     if(pathArray[i] == "Straight"){
       path.concat("S");
     }
+    //if robot has to make u-turn add to path
     if(pathArray[i] == "Back"){
       path.concat("B");
     }
+    //if robot has solved path complete path
     if(pathArray[i] == "Finished"){
       path.concat("F");
     }
@@ -209,6 +231,7 @@ void loop() {
   int SideRightSensorValue = digitalRead(SideOpticalSensorRight);
   int SideLeftSensorValue = digitalRead(SideOpticalSensorLeft);
 
+  //print values for debugging and performance testing
   Serial.print("side left Sensor: ");
   Serial.println(SideLeftSensorValue);
   Serial.print("side right Sensor: ");
@@ -228,34 +251,41 @@ void loop() {
 
 
   // Follow Line Logic 
-  //go straigh
   Serial.println(distance);
-//  if(distance <= 20) {
-//    stop();
-//    pathArray[index] = "Finished";
-//    index++; 
-//  }
+  //if ultrasonic detects object within 20, it will stop. Maze is solved
+  if(distance <= 20) {
+    stop();
+    pathArray[index] = "Finished";
+    index++; 
+    lcd.setCursor(0,0);
+    for (int i=0; i<index; i++) {
+    lcd.print(pathArray[i]);
+    }
+  }
 // if(leftSensorValueFront == rightSensorValueFront){
 //   
 // }
-  //go Right
+  //Both sensors are on black, go straight
    if(leftSensorValueFront==1 && rightSensorValueFront==1){
     straight();
   }
+  //robot is curving left, correct with right curve
   if(leftSensorValueFront==0 && rightSensorValueFront==1){
     fixL();
   }
+  //robot is curving right, correct with left curve
   if(leftSensorValueFront==1 && rightSensorValueFront==0){
     fixR();
   }
-  
+  //Robot has found a path on the right
   if(SideRightSensorValue && !SideLeftSensorValue){
        turnRight();
    }
+   //robot has found a path on the left
    if(SideLeftSensorValue && !SideRightSensorValue){
       turnLeft();
    }
-   
+  //robot has reached the end of a path, must make a u-turn
   if(leftSensorValueFront==0 && rightSensorValueFront==0){
     delay(100);
     if (leftSensorValueFront==0 && rightSensorValueFront==0){

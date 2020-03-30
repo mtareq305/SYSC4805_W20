@@ -220,9 +220,9 @@ void printArray(){
 /*
 This method is an infinite loop (main) that runs through the logic of the Robot Maze Solver, it reads the sensors and 
 decides if there are any turns and intersections. It also records the directions taken in the specified array. 
+Once the robot reaches the end of the maze (ultrasonic sensor trighgers end of maze), the path taken is printed on the screen.
 */
 void loop() {
-  // read the input on analog pin 0:
   // read the input on analog pin 0:
   int leftSensorValueFront = digitalRead(opticalSensorFrontLeft);
   int rightSensorValueFront = digitalRead(opticalSensorFrontRight);
@@ -251,10 +251,9 @@ void loop() {
   // Calculating the distance
   distance= duration*0.034/2;
 
-
-
   // Follow Line Logic 
   Serial.println(distance);
+  
   //if ultrasonic detects object within 20, it will stop. Maze is solved
   if(distance <= 20) {
     stop();

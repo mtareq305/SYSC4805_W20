@@ -6,6 +6,7 @@ Authors: Muhammmad Tarequzzaman, Samy Ibrahim, Jacob Martin, Ahmad Chaudhry
 //library packages required for I2C communication for LCD screen
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
+#include <Battery.h> // Install BatterySense library
 
 //constants for motors (left and right)
 const int motorA1      = 5;  
@@ -40,6 +41,15 @@ int index = 0;
 // set the LCD address to 0x27 for a 16 chars and 2 line display
 LiquidCrystal_I2C lcd(0x27,20,4);  
 
+// Battery Sense
+uint16_t minVoltage = 3800;
+uint16_t maxVoltage=5100;
+uint8_t sensePin;
+uint16_t refVoltage= 5000;
+float dividerRatio=2.0;
+
+Battery battery(minVoltage, maxVoltage, sensePin);
+
 /*
 This method is used to set up all the pins (for the HW Sensors) when the Robot is starting.
 */
@@ -60,7 +70,9 @@ void setup() {
   // initialize serial communication at 9600 bits per second:
   Serial.begin(9600);
   delay(3000);
-
+	
+  battery.begin(refVoltage, dividerRatio, &sigmoidal);
+  WDT_Initializing_ResetTime(WDTO_2S); // recreated by MUHAMMAD TAREQUZZAMAN
   lcd.init();
 }
 /*
